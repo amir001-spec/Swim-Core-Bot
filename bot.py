@@ -1,6 +1,6 @@
 import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import Application, CommandHandler, CallbackQueryHandler, MessageHandler, filters, ContextTypes
+from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
 
 # إعدادات النظام
 logging.basicConfig(level=logging.INFO)
@@ -10,29 +10,29 @@ def main_menu_keyboard():
     keyboard = [
         [InlineKeyboardButton("🛠️ هويّة المطوّر", callback_data='dev'), 
          InlineKeyboardButton("📡 حالة النظام", callback_data='status')],
-        [InlineKeyboardButton("🎮 مكتبة الألعاب المضمونة", callback_data='games_menu')],
-        [InlineKeyboardButton("📚 قائمة التعليمات", callback_data='help_menu')]
+        [InlineKeyboardButton("🎮 مكتبة ألعاب PSP المضمونة", callback_data='games_menu')],
+        [InlineKeyboardButton("🔙 العودة للقائمة الرئيسية", callback_data='back_to_main')]
     ]
     return InlineKeyboardMarkup(keyboard)
 
 def games_menu_keyboard():
-    # روابط مباشرة لمواقع تحميل ألعاب PSP عالمية لا تتعطل
+    # روابط مباشرة من موقع Vimm's Lair (الأكثر ضماناً في العالم)
     keyboard = [
-        [InlineKeyboardButton("God of War", url="https://www.emulatorgames.net/roms/psp/god-of-war-ghost-of-sparta/"), 
-         InlineKeyboardButton("GTA: LCS", url="https://www.emulatorgames.net/roms/psp/grand-theft-auto-liberty-city-stories/")],
-        [InlineKeyboardButton("Naruto Impact", url="https://www.emulatorgames.net/roms/psp/naruto-shippuden-ultimate-ninja-impact/"), 
-         InlineKeyboardButton("Dragon Ball Z", url="https://www.emulatorgames.net/roms/psp/dragon-ball-z-shin-budokai/")],
-        [InlineKeyboardButton("Tekken 6", url="https://www.emulatorgames.net/roms/psp/tekken-6/"), 
-         InlineKeyboardButton("Assassin's Creed", url="https://www.emulatorgames.net/roms/psp/assassins-creed-bloodlines/")],
-        [InlineKeyboardButton("🔍 تصفح آلاف الألعاب", url="https://www.emulatorgames.net/roms/psp/")],
+        [InlineKeyboardButton("God of War: Ghost of Sparta", url="https://vimm.net/vault/23541")],
+        [InlineKeyboardButton("GTA: Liberty City Stories", url="https://vimm.net/vault/23588")],
+        [InlineKeyboardButton("Naruto: Ultimate Ninja Impact", url="https://vimm.net/vault/23974")],
+        [InlineKeyboardButton("Dragon Ball Z: Shin Budokai", url="https://vimm.net/vault/23405")],
+        [InlineKeyboardButton("Tekken 6", url="https://vimm.net/vault/24250")],
+        [InlineKeyboardButton("Assassin's Creed: Bloodlines", url="https://vimm.net/vault/23243")],
+        [InlineKeyboardButton("🔍 تصفح آلاف الألعاب الأخرى", url="https://vimm.net/vault/PSP")],
         [InlineKeyboardButton("🔙 العودة للقائمة الرئيسية", callback_data='back_to_main')]
     ]
     return InlineKeyboardMarkup(keyboard)
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        f"🚀 نظام Swim Core V5.3 المحدث جاهز الآن!\n"
-        "تم تحديث الروابط لتكون مضمونة 100%.",
+        "🚀 تم تحديث نظام Swim Core إلى V5.4\n"
+        "تم استخدام سيرفرات Vimm المضمونة لتجنب أخطاء الشبكة.",
         reply_markup=main_menu_keyboard()
     )
 
@@ -41,11 +41,11 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.answer()
     
     if query.data == 'dev':
-        await query.edit_message_text(text="👤 المطور: القائد سويم\n💻 @Swim_Architect", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 عودة", callback_data='back_to_main')]]))
+        await query.edit_message_text(text="👤 المطور: القائد سويم\n💻 @Swim_Architect", reply_markup=main_menu_keyboard())
     elif query.data == 'status':
-        await query.edit_message_text(text="✅ النظام: متصل ونشط\n✅ الروابط: تم فحصها وتأمينها", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 عودة", callback_data='back_to_main')]]))
+        await query.edit_message_text(text="✅ النظام: متصل (V5.4)\n✅ السيرفر الحالي: Vimm's Lair", reply_markup=main_menu_keyboard())
     elif query.data == 'games_menu':
-        await query.edit_message_text(text="🕹️ اختر اللعبة (سيفتح التحميل مباشرة):", reply_markup=games_menu_keyboard())
+        await query.edit_message_text(text="🕹️ اختر اللعبة (سيرفرات Vimm فائقة الاستقرار):", reply_markup=games_menu_keyboard())
     elif query.data == 'back_to_main':
         await query.edit_message_text(text="قائمة التحكم الرئيسية:", reply_markup=main_menu_keyboard())
 
