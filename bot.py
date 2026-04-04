@@ -2,9 +2,9 @@ import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, MessageHandler, filters, ContextTypes
 
-# 1. إعدادات النظام
+# 1. إعدادات النظام (تم تحديث التوكن الجديد هنا)
 logging.basicConfig(level=logging.INFO)
-TOKEN = "8278063413:AAFVWuLjYvwHH1-17MYmv3qYKgsJpI7jr9c"
+TOKEN = "8278063413:AAHmK923faBItjxce9wyV58zkN-kB6p1c10"
 
 # دالة القائمة الرئيسية
 def main_menu_keyboard():
@@ -16,7 +16,7 @@ def main_menu_keyboard():
     ]
     return InlineKeyboardMarkup(keyboard)
 
-# دالة قائمة الألعاب (أزرار)
+# دالة قائمة الألعاب (أزرار تفاعلية)
 def games_menu_keyboard():
     keyboard = [
         [InlineKeyboardButton("God of War", callback_data='game_1'), InlineKeyboardButton("GTA: LCS", callback_data='game_2')],
@@ -60,25 +60,25 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
 
-    # بيانات الألعاب وروابطها
+    # روابط الألعاب (يمكنك استبدالها بروابطك الحقيقية لاحقاً)
     games_links = {
-        'game_1': ("God of War: Ghost of Sparta", "https://www.mediafire.com/file/example1"),
-        'game_2': ("GTA: Liberty City Stories", "https://www.mediafire.com/file/example2"),
-        'game_3': ("Naruto Shippuden: Impact", "https://www.mediafire.com/file/example3"),
-        'game_4': ("Dragon Ball Z: Shin Budokai", "https://www.mediafire.com/file/example4"),
-        'game_5': ("Tekken 6", "https://www.mediafire.com/file/example5"),
-        'game_6': ("Assassin's Creed: Bloodlines", "https://www.mediafire.com/file/example6"),
-        'game_7': ("Need for Speed: Most Wanted", "https://www.mediafire.com/file/example7"),
-        'game_8': ("PES 2024 Patch", "https://www.mediafire.com/file/example8"),
-        'game_9': ("Spider-Man 3", "https://www.mediafire.com/file/example9"),
-        'game_10': ("Ben 10: Protector of Earth", "https://www.mediafire.com/file/example10"),
+        'game_1': ("God of War: Ghost of Sparta", "https://www.mediafire.com/"),
+        'game_2': ("GTA: Liberty City Stories", "https://www.mediafire.com/"),
+        'game_3': ("Naruto Shippuden: Impact", "https://www.mediafire.com/"),
+        'game_4': ("Dragon Ball Z: Shin Budokai", "https://www.mediafire.com/"),
+        'game_5': ("Tekken 6", "https://www.mediafire.com/"),
+        'game_6': ("Assassin's Creed: Bloodlines", "https://www.mediafire.com/"),
+        'game_7': ("Need for Speed: Most Wanted", "https://www.mediafire.com/"),
+        'game_8': ("PES 2024 Patch", "https://www.mediafire.com/"),
+        'game_9': ("Spider-Man 3", "https://www.mediafire.com/"),
+        'game_10': ("Ben 10: Protector of Earth", "https://www.mediafire.com/"),
     }
 
     if query.data == 'dev':
         await query.edit_message_text(text="<b>👑 بيانات المطور الرسمي</b>\n👤 القائد سويم\n💻 @Swim_Architect", parse_mode='HTML', reply_markup=back_button())
     
     elif query.data == 'status':
-        await query.edit_message_text(text="<b>📡 حالة النظام</b>\n✅ نشط ومستقر", parse_mode='HTML', reply_markup=back_button())
+        await query.edit_message_text(text="<b>📡 حالة النظام</b>\n✅ نشط ومستقر بنظام V5.2", parse_mode='HTML', reply_markup=back_button())
     
     elif query.data == 'games_menu':
         await query.edit_message_text(text="🕹️ <b>اختر اللعبة التي تريد تحميلها:</b>", parse_mode='HTML', reply_markup=games_menu_keyboard())
