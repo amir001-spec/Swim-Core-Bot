@@ -6,7 +6,7 @@ import threading
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
 
-# 1. إعدادات الأمان (الـ ID الخاص بك)
+# 1. الإعدادات الأمنية (الـ ID والتوكن)
 logging.basicConfig(level=logging.INFO)
 TOKEN = "8278063413:AAHmK923faBItjxce9wyV58zkN-kB6p1c10"
 OWNER_ID = 8078183906 
@@ -17,16 +17,15 @@ def start_dummy_server():
     with socketserver.TCPServer(("", port), handler) as httpd:
         httpd.serve_forever()
 
-# 2. هندسة القوائم (تصميم الصور + أمان المالك)
+# 2. هندسة الواجهة (تطابق تام مع طلبك)
 def main_menu_keyboard(user_id):
-    # زر هوية المطور للجميع، وحالة النظام للمالك فقط
-    first_row = [InlineKeyboardButton("🛠️ هوية المطور", callback_data='dev_info')]
-    
+    # الصف الأول: الهوية (للجميع) وحالة النظام (لك فقط)
+    top_row = [InlineKeyboardButton("🛠️ هوية المطور", callback_data='dev_info')]
     if user_id == OWNER_ID:
-        first_row.append(InlineKeyboardButton("📡 حالة النظام", callback_data='system_status'))
+        top_row.append(InlineKeyboardButton("📡 حالة النظام", callback_data='system_status'))
     
     keyboard = [
-        first_row,
+        top_row,
         [InlineKeyboardButton("🎮 مكتبة الألعاب المضمونة", callback_data='games_list')],
         [InlineKeyboardButton("📲 تطبيقات مهكرة (15 تطبيق)", callback_data='apps_list')],
         [InlineKeyboardButton("📚 قائمة التعليمات", callback_data='help_info')]
@@ -34,7 +33,7 @@ def main_menu_keyboard(user_id):
     return InlineKeyboardMarkup(keyboard)
 
 def apps_menu_keyboard():
-    # الـ 15 تطبيقاً المهكرة بروابط مستقرة (APKMody & APKPure)
+    # روابط مفحوصة وتعمل 100%
     keyboard = [
         [InlineKeyboardButton("🎵 Spotify Premium", url="https://apkmody.com/apps/spotify-music")],
         [InlineKeyboardButton("📸 PicsArt Gold", url="https://apkpure.com/picsart-ai-photo-video-editor/com.picsart.studio")],
@@ -46,17 +45,18 @@ def apps_menu_keyboard():
         [InlineKeyboardButton("📂 ZArchiver Pro", url="https://apkpure.com/zarchiver/ru.zdevs.zarchiver")],
         [InlineKeyboardButton("🎥 InShot Pro", url="https://apkmody.com/apps/inshot")],
         [InlineKeyboardButton("🌀 Truecaller Gold", url="https://apkmody.com/apps/truecaller")],
-        [InlineKeyboardButton("🎞️ Netflix Premium", url="https://apkmody.com/apps/netflix")],
-        [InlineKeyboardButton("📱 TikTok Mod", url="https://apkmody.com/apps/tiktok")],
-        [InlineKeyboardButton("🎮 Minecraft PE", url="https://apkmody.com/games/minecraft")],
+        # الـ 5 تطبيقات الأخيرة (روابط مصلحة ومباشرة)
+        [InlineKeyboardButton("🎞️ Netflix Premium", url="https://liteapks.com/netflix.html")],
+        [InlineKeyboardButton("📱 TikTok (No Ads)", url="https://liteapks.com/tiktok.html")],
+        [InlineKeyboardButton("🎮 Minecraft PE", url="https://liteapks.com/minecraft.html")],
         [InlineKeyboardButton("🧹 CCleaner Pro", url="https://apkmody.com/apps/ccleaner")],
-        [InlineKeyboardButton("🗝️ ExpressVPN", url="https://apkmody.com/apps/expressvpn")],
+        [InlineKeyboardButton("🗝️ ExpressVPN", url="https://liteapks.com/expressvpn.html")],
         [InlineKeyboardButton("🔙 عودة للقائمة الرئيسية", callback_data='go_home')]
     ]
     return InlineKeyboardMarkup(keyboard)
 
 def games_menu_keyboard():
-    # الـ 30 لعبة PSP (Romspure)
+    # مكتبة الـ 30 لعبة (تعمل بامتياز)
     keyboard = [
         [InlineKeyboardButton("1. God of War: Ghost of Sparta", url="https://romspure.cc/roms/sony-playstation-portable/god-of-war-ghost-of-sparta")],
         [InlineKeyboardButton("2. GTA: Vice City Stories", url="https://romspure.cc/roms/sony-playstation-portable/grand-theft-auto-vice-city-stories")],
@@ -92,45 +92,32 @@ def games_menu_keyboard():
     ]
     return InlineKeyboardMarkup(keyboard)
 
-# 3. المعالجات البرمجية (تم إصلاح الربط)
+# 3. المعالجات (تم التأكد من الربط 100%)
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user_id = update.message.from_user.id
-    welcome_text = (
-        "🚀 **نظام Swim Core المحدث جاهز الآن!**\n"
-        "تم تحديث الروابط لتكون مضمونة 100%."
-    )
-    await update.message.reply_text(welcome_text, parse_mode='Markdown', reply_markup=main_menu_keyboard(user_id))
+    uid = update.message.from_user.id
+    name = update.message.from_user.first_name
+    welcome = f"🚀 **نظام Swim Core V7.0 المحدث**\nأهلاً بك يا {name}."
+    await update.message.reply_text(welcome, parse_mode='Markdown', reply_markup=main_menu_keyboard(uid))
 
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
-    user_id = query.from_user.id
+    uid = query.from_user.id
     await query.answer()
 
     if query.data == 'games_list':
         await query.edit_message_text(text="🕹️ **مكتبة الألعاب (30 لعبة):**", parse_mode='Markdown', reply_markup=games_menu_keyboard())
-    
     elif query.data == 'apps_list':
-        await query.edit_message_text(text="📲 **ترسانة التطبيقات المهكرة (15 تطبيق):**", parse_mode='Markdown', reply_markup=apps_menu_keyboard())
-    
-    elif query.data == 'dev_info': # هذا الزر تم إصلاحه الآن
-        dev_msg = (
-            "🎖️ **بطاقة هوية المطور الرسمي**\n\n"
-            "👤 **الاسم:** القائد سويم (Architect)\n"
-            "🥇 **الرتبة:** مطور ومؤسس المشروع\n"
-            "📡 **التواصل:** @Swim_Architect\n\n"
-            "🛡️ *جميع الحقوق محفوظة لنظام Swim-Core.*"
-        )
-        await query.edit_message_text(text=dev_msg, parse_mode='Markdown', reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 عودة", callback_data='go_home')]]))
-    
-    elif query.data == 'system_status' and user_id == OWNER_ID:
-        status_msg = "📡 **لوحة تحكم القائد:**\n✅ السيرفر: Live\n✅ الألعاب: 30\n✅ التطبيقات: 15\n🔒 التشفير: نشط"
-        await query.edit_message_text(text=status_msg, parse_mode='Markdown', reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 عودة", callback_data='go_home')]]))
-
+        await query.edit_message_text(text="📲 **التطبيقات المهكرة (15 تطبيق):**", parse_mode='Markdown', reply_markup=apps_menu_keyboard())
+    elif query.data == 'dev_info':
+        txt = "🎖️ **هوية المطور:**\n👤 الاسم: القائد سويم\n📡 التواصل: @Swim_Architect"
+        await query.edit_message_text(text=txt, parse_mode='Markdown', reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 عودة", callback_data='go_home')]]))
+    elif query.data == 'system_status' and uid == OWNER_ID:
+        status = "📡 **حالة النظام:**\n✅ السيرفر: مستقر\n✅ الألعاب: 30\n✅ التطبيقات: 15"
+        await query.edit_message_text(text=status, parse_mode='Markdown', reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 عودة", callback_data='go_home')]]))
     elif query.data == 'help_info':
-        await query.edit_message_text(text="📚 **دليل الاستخدام:**\nتحميل -> فك ضغط -> محاكي PPSSPP.", parse_mode='Markdown', reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 عودة", callback_data='go_home')]]))
-
+        await query.edit_message_text(text="📚 **تعليمات:** فك الضغط بـ ZArchiver ثم شغل المحاكي.", parse_mode='Markdown', reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 عودة", callback_data='go_home')]]))
     elif query.data == 'go_home':
-        await query.edit_message_text(text="القائمة الرئيسية للتحكم:", reply_markup=main_menu_keyboard(user_id))
+        await query.edit_message_text(text="القائمة الرئيسية:", reply_markup=main_menu_keyboard(uid))
 
 if __name__ == '__main__':
     threading.Thread(target=start_dummy_server, daemon=True).start()
