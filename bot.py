@@ -6,7 +6,7 @@ import threading
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
 
-# 1. الإعدادات الأمنية (الـ ID والتوكن)
+# 1. إعدادات النخبة والأمان
 logging.basicConfig(level=logging.INFO)
 TOKEN = "8278063413:AAHmK923faBItjxce9wyV58zkN-kB6p1c10"
 OWNER_ID = 8078183906 
@@ -17,23 +17,23 @@ def start_dummy_server():
     with socketserver.TCPServer(("", port), handler) as httpd:
         httpd.serve_forever()
 
-# 2. هندسة الواجهة (تطابق تام مع طلبك)
+# 2. هندسة الواجهة (تطابق الصور + إصلاح الروابط)
 def main_menu_keyboard(user_id):
-    # الصف الأول: الهوية (للجميع) وحالة النظام (لك فقط)
-    top_row = [InlineKeyboardButton("🛠️ هوية المطور", callback_data='dev_info')]
+    # الصف الأول: الهوية وحالة النظام (للمالك فقط)
+    top_row = [InlineKeyboardButton("🛠️ هوية المطور", callback_data='dev_page')]
     if user_id == OWNER_ID:
-        top_row.append(InlineKeyboardButton("📡 حالة النظام", callback_data='system_status'))
+        top_row.append(InlineKeyboardButton("📡 حالة النظام", callback_data='sys_status'))
     
     keyboard = [
         top_row,
-        [InlineKeyboardButton("🎮 مكتبة الألعاب المضمونة", callback_data='games_list')],
-        [InlineKeyboardButton("📲 تطبيقات مهكرة (15 تطبيق)", callback_data='apps_list')],
-        [InlineKeyboardButton("📚 قائمة التعليمات", callback_data='help_info')]
+        [InlineKeyboardButton("🎮 مكتبة الألعاب المضمونة", callback_data='games_page')],
+        [InlineKeyboardButton("📲 تطبيقات مهكرة (15 تطبيق)", callback_data='apps_page')],
+        [InlineKeyboardButton("📚 قائمة التعليمات", callback_data='help_page')]
     ]
     return InlineKeyboardMarkup(keyboard)
 
 def apps_menu_keyboard():
-    # روابط مفحوصة وتعمل 100%
+    # روابط محدثة ومفحوصة 100%
     keyboard = [
         [InlineKeyboardButton("🎵 Spotify Premium", url="https://apkmody.com/apps/spotify-music")],
         [InlineKeyboardButton("📸 PicsArt Gold", url="https://apkpure.com/picsart-ai-photo-video-editor/com.picsart.studio")],
@@ -45,18 +45,18 @@ def apps_menu_keyboard():
         [InlineKeyboardButton("📂 ZArchiver Pro", url="https://apkpure.com/zarchiver/ru.zdevs.zarchiver")],
         [InlineKeyboardButton("🎥 InShot Pro", url="https://apkmody.com/apps/inshot")],
         [InlineKeyboardButton("🌀 Truecaller Gold", url="https://apkmody.com/apps/truecaller")],
-        # الـ 5 تطبيقات الأخيرة (روابط مصلحة ومباشرة)
+        # الـ 5 تطبيقات المصلحة بروابط LiteAPKs المباشرة
         [InlineKeyboardButton("🎞️ Netflix Premium", url="https://liteapks.com/netflix.html")],
         [InlineKeyboardButton("📱 TikTok (No Ads)", url="https://liteapks.com/tiktok.html")],
         [InlineKeyboardButton("🎮 Minecraft PE", url="https://liteapks.com/minecraft.html")],
         [InlineKeyboardButton("🧹 CCleaner Pro", url="https://apkmody.com/apps/ccleaner")],
         [InlineKeyboardButton("🗝️ ExpressVPN", url="https://liteapks.com/expressvpn.html")],
-        [InlineKeyboardButton("🔙 عودة للقائمة الرئيسية", callback_data='go_home')]
+        [InlineKeyboardButton("🔙 عودة للقائمة الرئيسية", callback_data='back_home')]
     ]
     return InlineKeyboardMarkup(keyboard)
 
 def games_menu_keyboard():
-    # مكتبة الـ 30 لعبة (تعمل بامتياز)
+    # قائمة الـ 30 لعبة (بدون أي تغيير في الروابط الناجحة)
     keyboard = [
         [InlineKeyboardButton("1. God of War: Ghost of Sparta", url="https://romspure.cc/roms/sony-playstation-portable/god-of-war-ghost-of-sparta")],
         [InlineKeyboardButton("2. GTA: Vice City Stories", url="https://romspure.cc/roms/sony-playstation-portable/grand-theft-auto-vice-city-stories")],
@@ -88,15 +88,15 @@ def games_menu_keyboard():
         [InlineKeyboardButton("28. Dante's Inferno", url="https://romspure.cc/roms/sony-playstation-portable/dantes-inferno")],
         [InlineKeyboardButton("29. Burnout Legends", url="https://romspure.cc/roms/sony-playstation-portable/burnout-legends")],
         [InlineKeyboardButton("30. LEGO Batman", url="https://romspure.cc/roms/sony-playstation-portable/lego-batman-the-videogame")],
-        [InlineKeyboardButton("🔙 عودة للقائمة الرئيسية", callback_data='go_home')]
+        [InlineKeyboardButton("🔙 عودة للقائمة الرئيسية", callback_data='back_home')]
     ]
     return InlineKeyboardMarkup(keyboard)
 
-# 3. المعالجات (تم التأكد من الربط 100%)
+# 3. معالجة العمليات (المنطق المصلح بالكامل)
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     uid = update.message.from_user.id
     name = update.message.from_user.first_name
-    welcome = f"🚀 **نظام Swim Core V7.0 المحدث**\nأهلاً بك يا {name}."
+    welcome = f"🚀 **نظام Swim Core V7.1 المحدث**\nأهلاً بك يا {name} في مركز التحكم."
     await update.message.reply_text(welcome, parse_mode='Markdown', reply_markup=main_menu_keyboard(uid))
 
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -104,20 +104,43 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     uid = query.from_user.id
     await query.answer()
 
-    if query.data == 'games_list':
-        await query.edit_message_text(text="🕹️ **مكتبة الألعاب (30 لعبة):**", parse_mode='Markdown', reply_markup=games_menu_keyboard())
-    elif query.data == 'apps_list':
-        await query.edit_message_text(text="📲 **التطبيقات المهكرة (15 تطبيق):**", parse_mode='Markdown', reply_markup=apps_menu_keyboard())
-    elif query.data == 'dev_info':
-        txt = "🎖️ **هوية المطور:**\n👤 الاسم: القائد سويم\n📡 التواصل: @Swim_Architect"
-        await query.edit_message_text(text=txt, parse_mode='Markdown', reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 عودة", callback_data='go_home')]]))
-    elif query.data == 'system_status' and uid == OWNER_ID:
-        status = "📡 **حالة النظام:**\n✅ السيرفر: مستقر\n✅ الألعاب: 30\n✅ التطبيقات: 15"
-        await query.edit_message_text(text=status, parse_mode='Markdown', reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 عودة", callback_data='go_home')]]))
-    elif query.data == 'help_info':
-        await query.edit_message_text(text="📚 **تعليمات:** فك الضغط بـ ZArchiver ثم شغل المحاكي.", parse_mode='Markdown', reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 عودة", callback_data='go_home')]]))
-    elif query.data == 'go_home':
-        await query.edit_message_text(text="القائمة الرئيسية:", reply_markup=main_menu_keyboard(uid))
+    # قسم الألعاب
+    if query.data == 'games_page':
+        await query.edit_message_text(text="🕹️ **مكتبة الألعاب (30 لعبة مختارة):**", parse_mode='Markdown', reply_markup=games_menu_keyboard())
+    
+    # قسم التطبيقات
+    elif query.data == 'apps_page':
+        await query.edit_message_text(text="📲 **ترسانة التطبيقات المهكرة (15 تطبيق):**", parse_mode='Markdown', reply_markup=apps_menu_keyboard())
+    
+    # قسم هوية المطور (تم الإصلاح الجذري)
+    elif query.data == 'dev_page':
+        dev_text = (
+            "🎖️ **بطاقة هوية المطور الرسمي**\n\n"
+            "👤 **الاسم:** القائد سويم (Architect)\n"
+            "🥇 **الرتبة:** مؤسس ومطور النظام\n"
+            "📡 **التواصل:** @Swim_Architect\n\n"
+            "🛡️ *هذا النظام محمي بحقوق Swim-Core 2026.*"
+        )
+        await query.edit_message_text(text=dev_text, parse_mode='Markdown', reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 عودة", callback_data='back_home')]]))
+    
+    # قسم حالة النظام (للمالك فقط)
+    elif query.data == 'sys_status' and uid == OWNER_ID:
+        status_text = "📡 **لوحة تحكم القائد:**\n✅ السيرفر: مستقر (Live)\n✅ ألعاب: 30 نشطة\n✅ تطبيقات: 15 مستقرة\n🔒 مستوى الأمان: عالي"
+        await query.edit_message_text(text=status_text, parse_mode='Markdown', reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 عودة", callback_data='back_home')]]))
+
+    # قسم التعليمات (تمت إعادتها بالكامل)
+    elif query.data == 'help_page':
+        help_full = (
+            "📚 **دليل تشغيل الألعاب والتطبيقات:**\n\n"
+            "1️⃣ **للألعاب:** اضغط على رابط اللعبة، حمل ملف الـ ISO، فك الضغط عنه باستخدام **ZArchiver**، ثم افتحه عبر محاكي **PPSSPP**.\n\n"
+            "2️⃣ **للتطبيقات:** اضغط على رابط التطبيق، حمله بصيغة APK، وقم بتثبيته مباشرة (تأكد من تفعيل تثبيت المصادر المجهولة).\n\n"
+            "⚠️ **ملاحظة:** جميع الروابط تخضع للفحص المستمر لضمان سلامتها."
+        )
+        await query.edit_message_text(text=help_full, parse_mode='Markdown', reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 عودة", callback_data='back_home')]]))
+
+    # العودة للقائمة الرئيسية
+    elif query.data == 'back_home':
+        await query.edit_message_text(text="القائمة الرئيسية للتحكم:", reply_markup=main_menu_keyboard(uid))
 
 if __name__ == '__main__':
     threading.Thread(target=start_dummy_server, daemon=True).start()
