@@ -6,7 +6,7 @@ import threading
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
 
-# 1. إعدادات الأمان (الـ ID الخاص بك هو المفتاح)
+# 1. إعدادات الأمان (الـ ID الخاص بك)
 logging.basicConfig(level=logging.INFO)
 TOKEN = "8278063413:AAHmK923faBItjxce9wyV58zkN-kB6p1c10"
 OWNER_ID = 8078183906 
@@ -19,7 +19,7 @@ def start_dummy_server():
 
 # 2. هندسة القوائم (تصميم الصور + أمان المالك)
 def main_menu_keyboard(user_id):
-    # الصف الأول: هوية المطور (للجميع) وحالة النظام (للمالك فقط)
+    # زر هوية المطور للجميع، وحالة النظام للمالك فقط
     first_row = [InlineKeyboardButton("🛠️ هوية المطور", callback_data='dev_info')]
     
     if user_id == OWNER_ID:
@@ -34,7 +34,7 @@ def main_menu_keyboard(user_id):
     return InlineKeyboardMarkup(keyboard)
 
 def apps_menu_keyboard():
-    # الـ 15 تطبيقاً المهكرة بروابط مستقرة
+    # الـ 15 تطبيقاً المهكرة بروابط مستقرة (APKMody & APKPure)
     keyboard = [
         [InlineKeyboardButton("🎵 Spotify Premium", url="https://apkmody.com/apps/spotify-music")],
         [InlineKeyboardButton("📸 PicsArt Gold", url="https://apkpure.com/picsart-ai-photo-video-editor/com.picsart.studio")],
@@ -46,17 +46,17 @@ def apps_menu_keyboard():
         [InlineKeyboardButton("📂 ZArchiver Pro", url="https://apkpure.com/zarchiver/ru.zdevs.zarchiver")],
         [InlineKeyboardButton("🎥 InShot Pro", url="https://apkmody.com/apps/inshot")],
         [InlineKeyboardButton("🌀 Truecaller Gold", url="https://apkmody.com/apps/truecaller")],
-        [InlineKeyboardButton("🎞️ Netflix Premium (Mod)", url="https://apkmody.com/apps/netflix")],
-        [InlineKeyboardButton("📱 TikTok (No Watermark)", url="https://apkmody.com/apps/tiktok")],
-        [InlineKeyboardButton("🎮 Minecraft PE (Mod)", url="https://apkmody.com/games/minecraft")],
+        [InlineKeyboardButton("🎞️ Netflix Premium", url="https://apkmody.com/apps/netflix")],
+        [InlineKeyboardButton("📱 TikTok Mod", url="https://apkmody.com/apps/tiktok")],
+        [InlineKeyboardButton("🎮 Minecraft PE", url="https://apkmody.com/games/minecraft")],
         [InlineKeyboardButton("🧹 CCleaner Pro", url="https://apkmody.com/apps/ccleaner")],
-        [InlineKeyboardButton("🗝️ ExpressVPN (Premium)", url="https://apkmody.com/apps/expressvpn")],
+        [InlineKeyboardButton("🗝️ ExpressVPN", url="https://apkmody.com/apps/expressvpn")],
         [InlineKeyboardButton("🔙 عودة للقائمة الرئيسية", callback_data='go_home')]
     ]
     return InlineKeyboardMarkup(keyboard)
 
 def games_menu_keyboard():
-    # الـ 30 لعبة (روابط Romspure الأصلية دون تغيير)
+    # الـ 30 لعبة PSP (Romspure)
     keyboard = [
         [InlineKeyboardButton("1. God of War: Ghost of Sparta", url="https://romspure.cc/roms/sony-playstation-portable/god-of-war-ghost-of-sparta")],
         [InlineKeyboardButton("2. GTA: Vice City Stories", url="https://romspure.cc/roms/sony-playstation-portable/grand-theft-auto-vice-city-stories")],
@@ -92,7 +92,7 @@ def games_menu_keyboard():
     ]
     return InlineKeyboardMarkup(keyboard)
 
-# 3. المعالجات البرمجية (المنطق المصلح)
+# 3. المعالجات البرمجية (تم إصلاح الربط)
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.message.from_user.id
     welcome_text = (
@@ -107,12 +107,12 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.answer()
 
     if query.data == 'games_list':
-        await query.edit_message_text(text="🕹️ **مكتبة الألعاب (30 لعبة أصلية):**", parse_mode='Markdown', reply_markup=games_menu_keyboard())
+        await query.edit_message_text(text="🕹️ **مكتبة الألعاب (30 لعبة):**", parse_mode='Markdown', reply_markup=games_menu_keyboard())
     
     elif query.data == 'apps_list':
         await query.edit_message_text(text="📲 **ترسانة التطبيقات المهكرة (15 تطبيق):**", parse_mode='Markdown', reply_markup=apps_menu_keyboard())
     
-    elif query.data == 'dev_info':
+    elif query.data == 'dev_info': # هذا الزر تم إصلاحه الآن
         dev_msg = (
             "🎖️ **بطاقة هوية المطور الرسمي**\n\n"
             "👤 **الاسم:** القائد سويم (Architect)\n"
