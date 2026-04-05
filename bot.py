@@ -8,22 +8,30 @@ from telegram.ext import Application, CommandHandler, CallbackQueryHandler, Cont
 
 logging.basicConfig(level=logging.INFO)
 
-# 🔐 التوكن من البيئة (آمن)
-TOKEN = os.getenv("8293450597:AAGnZH6CuyPEBrMUMIMPJkN3TXMRhU3jeQY")
+TOKEN = os.getenv("BOT_TOKEN")
 OWNER_ID = 8078183906
 
+# ✅ تحقق من التوكن
+if not TOKEN:
+    raise ValueError("❌ BOT_TOKEN غير موجود! أضفه في Render Environment Variables")
+
+# ✅ سيرفر محسن
 def start_dummy_server():
     port = int(os.environ.get("PORT", 8080))
-    handler = http.server.SimpleHTTPRequestHandler
-    with socketserver.TCPServer(("", port), handler) as httpd:
+
+    class Handler(http.server.SimpleHTTPRequestHandler):
+        def log_message(self, format, *args):
+            return
+
+    with socketserver.TCPServer(("0.0.0.0", port), Handler) as httpd:
         httpd.serve_forever()
 
 def main_menu(user_id):
     row1 = [InlineKeyboardButton("🛠️ هوية المطور", callback_data='dev')]
-    
+
     if user_id == OWNER_ID:
         row1.append(InlineKeyboardButton("📡 حالة النظام", callback_data='sys'))
-    
+
     keyboard = [
         row1,
         [InlineKeyboardButton("🎮 مكتبة الألعاب", callback_data='games')],
@@ -62,29 +70,4 @@ async def handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
             reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 رجوع", callback_data='home')]])
         )
 
-    elif query.data == 'sys' and uid == OWNER_ID:
-        await query.edit_message_text(
-            "📡 البوت يعمل بشكل طبيعي",
-            reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 رجوع", callback_data='home')]])
-        )
-
-    elif query.data == 'home':
-        await query.edit_message_text(
-            "🏠 القائمة الرئيسية",
-            reply_markup=main_menu(uid)
-        )
-
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text(
-        "🚀 البوت يعمل الآن",
-        reply_markup=main_menu(update.message.from_user.id)
-    )
-
-if __name__ == '__main__':
-    threading.Thread(target=start_dummy_server, daemon=True).start()
-
-    app = Application.builder().token(TOKEN).build()
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(CallbackQueryHandler(handle))
-
-    app.run_polling()
+    elif query.data == 'sys' and
