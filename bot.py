@@ -9,7 +9,7 @@ from telegram.ext import Application, CommandHandler, CallbackQueryHandler, Cont
 logging.basicConfig(level=logging.INFO)
 
 # 🔐 التوكن من البيئة (آمن)
-TOKEN = os.getenv("8293450597:AAGJ-wVdgwcEo8epWn6iFBpSHmp4yEpac5A")
+TOKEN = os.getenv("8293450597:AAGnZH6CuyPEBrMUMIMPJkN3TXMRhU3jeQY")
 OWNER_ID = 8078183906
 
 def start_dummy_server():
